@@ -2,8 +2,10 @@
 import { useSidebar } from "@/context/SidebarContext";
 import { userAtom } from "@/jotai/atoms/userAtom";
 import AppHeader from "@/layout/AppHeader";
-import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
+import AppSidebar from "@/layout/navigation/AppSidebar";
+import { INTERNAL_ENDPOINTS } from "@/lib/ApiUrl";
+import { fetchData } from "@/lib/fetch";
 import { getToken } from "@/lib/token";
 import { AuthResponse } from "@/lib/types";
 import { useAtom } from "jotai";
@@ -23,14 +25,12 @@ export default function AdminLayout({
       if (!token) {
         redirect("/signin")
       } else {
-        const result = await fetch('/api/auth/verify', {
+        const result = await fetchData<AuthResponse>(`/api/${INTERNAL_ENDPOINTS.AUTH.VERIFY}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(token),
-        })
-        const dataItem:AuthResponse= await result.json()
-        if(dataItem.success && user==null){
-          setUser(dataItem)
+          body:token
+        });
+        if(result!.success && user==null){
+          setUser(result)
         }
       }
     }

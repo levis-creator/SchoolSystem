@@ -9,17 +9,17 @@ This document outlines the **tasks** required to complete the **College School S
 ## **1. Department Management**
 
 ### **Tasks**
-- [ ] **Create Department Table**:
+- [X] **Create Department Table**:
   - Define the `Department` model in the backend.
   - Create a migration to generate the `Department` table in the database.
-- [ ] **Add Department API**:
+- [X] **Add Department API**:
   - Implement a POST API to add a new department.
   - Add validation for department details (name, building, budget).
-- [ ] **Update Department API**:
+- [X] **Update Department API**:
   - Implement a PUT API to update department details.
-- [ ] **Delete Department API**:
+- [X] **Delete Department API**:
   - Implement a DELETE API to delete a department.
-- [ ] **List Departments API**:
+- [X] **List Departments API**:
   - Implement a GET API to fetch a list of all departments.
 - [ ] **Frontend UI for Department Management**:
   - Create a form to add/update departments.

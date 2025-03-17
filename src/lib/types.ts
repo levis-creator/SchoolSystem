@@ -45,3 +45,7 @@ export interface ResponseDto{
     message:string;
 }
 
+export interface Department{
+    departmentName:string;
+    description?:string;
+}

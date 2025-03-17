@@ -13,7 +13,8 @@ export const ENDPOINT = {
     USERMANAGER: {
         USERS: '/api/userManager/users',
         USER: '/api/userManager/user'
-    }
+    },
+    DEPARTMENT: '/api/department'
 }
 
 export const INTERNAL_ENDPOINTS = {
@@ -25,5 +26,6 @@ export const INTERNAL_ENDPOINTS = {
 
     },
     USERS: '/users',
-    USER: '/user'
+    USER: '/user',
+    DEPARTMENT:'/department'
 }
