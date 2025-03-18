@@ -51,17 +51,11 @@ export async function POST(req: NextRequest) {
             },
             body: JSON.stringify(requestBody),
         });
-
-        if (!result.ok) {
-            const errorData: ResponseDto = await result.json();
-            console.error("API Error:", errorData);
-            return NextResponse.json(
-                { message: errorData.message },
-                { status: errorData.statusCode }
-            );
+        const data: ResponseDto = await result.json();
+        if (!data.success) {
+            return NextResponse.json(data, {status:data.statusCode})
         }
 
-        const data: ResponseDto = await result.json();
         return NextResponse.json(data, { status: 201 });
 
     } catch (error) {

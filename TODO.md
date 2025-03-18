@@ -21,7 +21,7 @@ This document outlines the **tasks** required to complete the **College School S
   - Implement a DELETE API to delete a department.
 - [X] **List Departments API**:
   - Implement a GET API to fetch a list of all departments.
-- [ ] **Frontend UI for Department Management**:
+- [X] **Frontend UI for Department Management**:
   - Create a form to add/update departments.
   - Create a table to display the list of departments.
 

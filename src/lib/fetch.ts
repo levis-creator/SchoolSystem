@@ -30,6 +30,7 @@ export async function fetchData<T>(
 
     if (!response.ok) {
       console.error(`HTTP error! Status: ${response.status}`);
+      return await response.json();
     }
 
     // ✅ Check if response is empty before parsing JSON

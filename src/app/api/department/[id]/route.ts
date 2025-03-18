@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 // GET Request - Fetch a single user by ID
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const { id } = params;
+        const { id } =await params;
         const url = `${API_URL.EXTERNAL}${ENDPOINT.DEPARTMENT}/${id}`;
         const token = await getToken();
 
@@ -17,17 +17,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
             },
         });
 
-        if (!result.ok) {
-            const errorData: ResponseDto = await result.json();
-            console.error("API Error:", errorData);
-            return NextResponse.json(
-                { message: errorData.message },
-                { status: errorData.statusCode }
-            );
-        }
-
         const data: ResponseDto = await result.json();
-        return NextResponse.json(data.data, { status: 200 });
+        return NextResponse.json(data , { status: data.statusCode });
 
     } catch (error) {
         console.error("Server Error:", error);
@@ -38,7 +29,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 // PUT Request - Update user details
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const { id } = params;
+        const { id } =await params;
         const url = `${API_URL.EXTERNAL}${ENDPOINT.DEPARTMENT}/${id}`;
         const token = await getToken();
         const requestBody = await req.json();
@@ -54,17 +45,10 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
             body: JSON.stringify(requestBody),
         });
 
-        if (!result.ok) {
-            const errorData: ResponseDto = await result.json();
-            console.error("API Error:", errorData);
-            return NextResponse.json(
-                { message: errorData.message },
-                { status: errorData.statusCode }
-            );
-        }
+     
 
         const data: ResponseDto = await result.json();
-        return NextResponse.json(data, { status: 200 });
+        return NextResponse.json(data, { status: data.statusCode });
 
     } catch (error) {
         console.error("Server Error:", error);
@@ -75,7 +59,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 // DELETE Request - Remove a user by ID
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const { id } = params;
+        const { id } = await params;
         const url = `${API_URL.EXTERNAL}${ENDPOINT.DEPARTMENT}/${id}`;
         const token = await getToken();
 
@@ -88,17 +72,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
                 "Authorization": `Bearer ${token}`,
             },
         });
+        const data: ResponseDto = await result.json();
 
-        if (!result.ok) {
-            const errorData: ResponseDto = await result.json();
-            console.error("API Error:", errorData);
-            return NextResponse.json(
-                { message: errorData.message },
-                { status: errorData.statusCode }
-            );
-        }
-
-        return NextResponse.json({ message: "deleted successfully" }, { status: 200 });
+        return NextResponse.json(data, { status: data.statusCode });
 
     } catch (error) {
         console.error("Server Error:", error);
