@@ -43,7 +43,8 @@ const DepartmentActions = ({ department }: { department: Department }) => {
             } else {
                 toast.error(results?.message || "Failed to delete department");
             }
-        } catch (error) {
+        } catch (error: unknown) {
+            console.error(error)
             toast.error("An error occurred while deleting the department");
         }
     }, [selectedDepartment, refreshData, setDelete]);

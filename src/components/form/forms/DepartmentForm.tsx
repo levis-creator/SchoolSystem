@@ -78,7 +78,8 @@ const DepartmentForm = () => {
             } else {
                 toast.error(res?.message || "Something went wrong!");
             }
-        } catch (error) {
+        } catch (error: unknown) {
+            console.log(error)
             toast.error("An error occurred while processing your request.");
         } finally {
             setLoading(false); // Stop loading
