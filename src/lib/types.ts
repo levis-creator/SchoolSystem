@@ -42,11 +42,19 @@ export interface ResponseDto{
     success?:boolean;
     statusCode:number;
     data?:object;
+    items?:object;
+    typeData?:object; 
     message:string;
 }
 
 export interface Department{
     id?:number;
     departmentName:string;
+    departmentCode?:string;
     description?:string;
+}
+export interface DataAtom<T>{
+    data:T|undefined;
+    isLoading:boolean;
+    error?:string|null;
 }

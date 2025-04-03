@@ -13,10 +13,11 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
-import Input from '../input/InputField';
-import TextArea from '../input/TextArea';
-import Label from '../Label';
+
 import { ClipLoader } from 'react-spinners'; // Import a spinner for the loading state
+import Label from '@/components/form/Label';
+import TextArea from '@/components/form/input/TextArea';
+import Input from '@/components/form/input/InputField';
 
 const schema = z.object({
     departmentName: z.string().min(3, 'Department name must be at least 3 characters'),
@@ -70,18 +71,16 @@ const DepartmentForm = () => {
                 method,
                 body: data,
             });
-
+            console.log()
             if (res?.success) {
-                toast.success(edit ? "Updated successfully" : "Added successfully");
                 refetchData();
                 closeModal();
-            } else {
-                toast.error(res?.message || "Something went wrong!");
             }
         } catch (error: unknown) {
             console.log(error)
             toast.error("An error occurred while processing your request.");
         } finally {
+
             setLoading(false); // Stop loading
             setDisabled(false); // Re-enable buttons
         }

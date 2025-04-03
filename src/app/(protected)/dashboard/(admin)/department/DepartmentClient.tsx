@@ -2,22 +2,19 @@
 
 import { useEffect } from "react";
 import { useAtom, useAtomValue } from "jotai";
-import DepartmentForm from "@/components/form/forms/DepartmentForm";
 import BlankDataPage from "@/components/tables/BlankDataPage";
-import { Department } from "@/lib/types";
+import {DataAtom, Department} from "@/lib/types";
 import useDepartmentColumns from "./column";
 import { departmentsAtom, refreshDepartmentsAtom } from "@/jotai/atoms/departmentAtoms";
+import DepartmentForm from "./DepartmentForm";
 
 const useFetchDepartments = () => {
     const departments = useAtomValue(departmentsAtom);
-    const [, fetchData] = useAtom(refreshDepartmentsAtom);
+    const [, fetchData] = useAtom(refreshDepartmentsAtom); // Get fetchData function
 
     useEffect(() => {
-        // @ts-expect-error: Ignoring TypeScript error for unknown error type
-        if (!departments.data?.length && !departments.isLoading) {
-            fetchData().catch((error) => {
-                console.error("Failed to fetch departments:", error);
-            });
+        if (departments.data==undefined && !departments.isLoading) {
+            fetchData(); // Call fetch function correctly
         }
     }, [departments.data, departments.isLoading, fetchData]);
 
@@ -27,16 +24,13 @@ const useFetchDepartments = () => {
 const DepartmentClient = () => {
     const departments = useFetchDepartments();
     const columns = useDepartmentColumns();
-
+ 
     return (
         <>
-
             <BlankDataPage<Department>
                 pageTitle="Department"
                 columns={columns}
-                // @ts-expect-error: Ignoring TypeScript error for unknown error type
-
-                dataItems={departments}
+                dataItems={departments as DataAtom<Department[]>} 
             />
             <DepartmentForm />
         </>

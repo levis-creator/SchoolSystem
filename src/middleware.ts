@@ -6,8 +6,8 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const protectedRoutes = ['/dashboard', '/profile'];
-// redirect to dashoard if logged in
-// Redirect to login if trying to access protected routes without a token
+// redirect to dashboard if logged in
+// Redirect to signin if trying to access protected routes without a token
 if (protectedRoutes.some((route) => pathname.startsWith(route)) && !token) {
   return NextResponse.redirect(new URL('/signin', req.url));
 }

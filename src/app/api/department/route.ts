@@ -9,25 +9,15 @@ export async function GET() {
         const url = API_URL.EXTERNAL + ENDPOINT.DEPARTMENT;
         const token = await getToken();
 
-        const result = await fetch(url, {
+        const response = await fetch(url, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`,
             },
         });
-
-        if (!result.ok) {
-            const errorData: ResponseDto = await result.json();
-            console.error("API Error:", errorData);
-            return NextResponse.json(
-                { message: errorData.message },
-                { status: errorData.statusCode }
-            );
-        }
-
-        const data: ResponseDto = await result.json();
-        return NextResponse.json(data.data, { status: 200 });
-
+        const results:ResponseDto=await response.json();    
+        return NextResponse.json(results, {status: results.statusCode});
+        
     } catch (error) {
         console.error("Server Error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

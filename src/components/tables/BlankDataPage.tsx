@@ -9,11 +9,12 @@ import { modalAtom } from "@/jotai/atoms/uiAtom";
 import PageBreadcrumb from "../common/PageBreadCrumb";
 import Button from "../ui/button/Button";
 import DataTable from "./DataTable";
+import {DataAtom} from "@/lib/types";
 
 interface BlankDataPageProps<T> {
     pageTitle: string;
     columns: ColumnDef<T, unknown>[];
-    dataItems?: AtomItem<T>;
+    dataItems?: DataAtom<T[]>;
     onAddClick?: () => void; // Optional callback for the "Add" button
 }
 
@@ -46,7 +47,7 @@ const BlankDataPage = <T,>({ pageTitle, dataItems, columns, onAddClick }: BlankD
         if (dataItems?.error) {
             return (
                 <div className="flex justify-center items-center h-64 text-red-600">
-                    <p>Error loading data: {dataItems.error.message}</p>
+                    <p>Error loading data: {dataItems.error}</p>
                 </div>
             );
         }

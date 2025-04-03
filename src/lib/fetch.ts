@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+import {ResponseDto} from "@/lib/types";
 
 interface FetchOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -27,19 +29,15 @@ export async function fetchData<T>(
       cache, // Enables caching control
       next: { revalidate }, // Revalidates every `revalidate` seconds (for Next.js API routes)
     });
-
+    const result:ResponseDto = await response.json();
     if (!response.ok) {
-      console.error(`HTTP error! Status: ${response.status}`);
-      return await response.json();
+      toast.error(`HTTP error! Status: ${response.status}`);
+      return null;
     }
-
-    // ✅ Check if response is empty before parsing JSON
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      return (await response.json()) as T;
-    } else {
-      return null; // Return null for empty responses
-    }
+    toast.success(result.message);
+  
+    const data= method=='GET'? result.data: result
+    return data as T
   } catch (error: unknown) {
     console.error('Error fetching data:', error);
     throw error instanceof Error ? error : new Error('An unknown error occurred');
