@@ -5,8 +5,8 @@ import { useAtom, useAtomValue } from "jotai";
 import BlankDataPage from "@/components/tables/BlankDataPage";
 import {DataAtom, Student} from "@/lib/types";
 import useStudentColumns from "./column";
-import { StudentsAtom, refreshStudentsAtom } from "@/jotai/atoms/StudentAtoms";
 import StudentForm from "./StudentForm";
+import { refreshStudentsAtom, StudentsAtom } from "./studentAtoms";
 
 const useFetchStudents = () => {
     const Students = useAtomValue(StudentsAtom);
@@ -31,6 +31,7 @@ const StudentClient = () => {
                 pageTitle="Student"
                 columns={columns}
                 dataItems={Students as DataAtom<Student[]>} 
+                defaultHiddenColumns={["nationalId", "departmentCode"]}
             />
             <StudentForm />
         </>

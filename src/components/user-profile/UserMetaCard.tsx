@@ -1,12 +1,7 @@
 "use client";
-import React from "react";
-import { useModal } from "../../hooks/useModal";
-import { Modal } from "../ui/modal";
-import Button from "../ui/button/Button";
-import Input from "../form/input/InputField";
-import Label from "../form/Label";
-import Image from "next/image";
 import { UserInfo } from "@/lib/types";
+import Avvvatars from 'avvvatars-react';
+import Image from "next/image";
 
 
 export default function UserMetaCard({data}:{data:UserInfo}) {
@@ -16,6 +11,7 @@ export default function UserMetaCard({data}:{data:UserInfo}) {
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
             <div className="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
+
               <Image
                 width={80}
                 height={80}

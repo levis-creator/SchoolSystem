@@ -9,29 +9,30 @@ import { modalAtom } from "@/jotai/atoms/uiAtom";
 import PageBreadcrumb from "../common/PageBreadCrumb";
 import Button from "../ui/button/Button";
 import DataTable from "./DataTable";
-import {DataAtom} from "@/lib/types";
+import { DataAtom } from "@/lib/types";
 
 interface BlankDataPageProps<T> {
     pageTitle: string;
     columns: ColumnDef<T, unknown>[];
     dataItems?: DataAtom<T[]>;
-    onAddClick?: () => void; // Optional callback for the "Add" button
+    onAddClick?: () => void;
+    defaultHiddenColumns?: string[]; // <-- Added prop
 }
 
-type AtomItem<T> = {
-    data?: T[];
-    isLoading: boolean;
-    error?: Error;
-};
-
-const BlankDataPage = <T,>({ pageTitle, dataItems, columns, onAddClick }: BlankDataPageProps<T>) => {
+const BlankDataPage = <T,>({
+    pageTitle,
+    dataItems,
+    columns,
+    onAddClick,
+    defaultHiddenColumns = [], // <-- Default value
+}: BlankDataPageProps<T>) => {
     const setIsOpen = useSetAtom(modalAtom);
 
     const handleAddClick = useCallback(() => {
         if (onAddClick) {
-            onAddClick(); // Use the provided callback if available
+            onAddClick();
         } else {
-            setIsOpen(true); // Fallback to opening the modal
+            setIsOpen(true);
         }
     }, [onAddClick, setIsOpen]);
 
@@ -60,13 +61,19 @@ const BlankDataPage = <T,>({ pageTitle, dataItems, columns, onAddClick }: BlankD
             );
         }
 
-        return <DataTable columns={columns} data={dataItems.data} />;
+        return (
+            <DataTable
+                columns={columns}
+                data={dataItems.data}
+                defaultHiddenColumns={defaultHiddenColumns} // <-- Passed down
+            />
+        );
     };
 
     return (
         <div>
             <PageBreadcrumb pageTitle={pageTitle} />
-            <div className="min-h-screen rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12">
+            <div className="min-h-screen rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12 max-w-full">
                 <div className="flex justify-end mb-6">
                     <Button onClick={handleAddClick}>
                         Add {pageTitle} <Plus className="ml-2" size={16} />

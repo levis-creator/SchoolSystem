@@ -5,7 +5,7 @@ import { useAtom, useAtomValue } from "jotai";
 import BlankDataPage from "@/components/tables/BlankDataPage";
 import {DataAtom, Department} from "@/lib/types";
 import useDepartmentColumns from "./column";
-import { departmentsAtom, refreshDepartmentsAtom } from "@/jotai/atoms/departmentAtoms";
+import { departmentsAtom, refreshDepartmentsAtom } from "@/app/(protected)/dashboard/(admin)/department/departmentAtoms";
 import DepartmentForm from "./DepartmentForm";
 
 const useFetchDepartments = () => {

@@ -4,7 +4,7 @@ import { ResponseDto } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
 
-const url = API_URL.EXTERNAL + ENDPOINT.DEPARTMENT;
+const url = API_URL.EXTERNAL + ENDPOINT.STUDENT;
 // GET Request - Fetch all users
 export async function GET() {
     try {

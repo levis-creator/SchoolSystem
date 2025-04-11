@@ -3,7 +3,7 @@ import { getToken } from "@/lib/token";
 import { ResponseDto } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
-const apiurl = `${API_URL.EXTERNAL}${ENDPOINT.DEPARTMENT}`;
+const apiurl = `${API_URL.EXTERNAL}${ENDPOINT.STUDENT}`;
 
 // GET Request - Fetch a single user by ID
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {

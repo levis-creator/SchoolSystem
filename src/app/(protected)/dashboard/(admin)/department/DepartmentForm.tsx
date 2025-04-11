@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
-import { refreshDepartmentsAtom, selectedDepartmentAtom } from '@/jotai/atoms/departmentAtoms';
 import { editUiAtom, modalAtom } from '@/jotai/atoms/uiAtom';
 import { INTERNAL_ENDPOINTS } from '@/lib/ApiUrl';
 import { fetchData } from '@/lib/fetch';
@@ -18,6 +17,7 @@ import { ClipLoader } from 'react-spinners'; // Import a spinner for the loading
 import Label from '@/components/form/Label';
 import TextArea from '@/components/form/input/TextArea';
 import Input from '@/components/form/input/InputField';
+import { refreshDepartmentsAtom, selectedDepartmentAtom } from './departmentAtoms';
 
 const schema = z.object({
     departmentName: z.string().min(3, 'Department name must be at least 3 characters'),

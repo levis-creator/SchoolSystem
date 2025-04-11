@@ -37,7 +37,19 @@ export interface AppUsers{
     email?:string;
     phoneNumber?:string;
 }
-
+export interface Student {
+    id?: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    nationalId: string;
+    admNo: string;
+    departmentId?: string | null;
+    departmentName?: string | null;
+    isActive: boolean;
+    departmentCode?: string | null;
+  }
+  
 export interface ResponseDto{
     success?:boolean;
     statusCode:number;

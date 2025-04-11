@@ -30,19 +30,19 @@ This document outlines the **tasks** required to complete the **College School S
 ## **2. Student Management**
 
 ### **Tasks**
-- [ ] **Create Student Table**:
+- [x] **Create Student Table**:
   - Define the `Student` model in the backend.
   - Create a migration to generate the `Student` table in the database.
-- [ ] **Add Student API**:
+- [x] **Add Student API**:
   - Implement a POST API to add a new student.
   - Add validation for student details (name, email, phone, major).
-- [ ] **Update Student API**:
+- [x] **Update Student API**:
   - Implement a PUT API to update student details.
-- [ ] **Delete Student API**:
+- [x] **Delete Student API**:
   - Implement a DELETE API to delete a student.
-- [ ] **List Students API**:
+- [x] **List Students API**:
   - Implement a GET API to fetch a list of all students.
-- [ ] **Frontend UI for Student Management**:
+- [x] **Frontend UI for Student Management**:
   - Create a form to add/update students.
   - Create a table to display the list of students.
 

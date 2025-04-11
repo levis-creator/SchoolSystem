@@ -98,6 +98,11 @@ export type NavItems={
         path:"/dashboard/users"
       },
       {
+        icon: Icons.GraduationCap ,
+        name: "Students",
+        path: "/dashboard/student",
+      },
+      {
         icon: Icons.UserCircleIcon ,
         name: "User Profile",
         path: "/dashboard/profile",

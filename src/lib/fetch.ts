@@ -22,6 +22,7 @@ export async function fetchData<T>(
   } = options;
 
   try {
+    console.log(body)
     const response = await fetch(url, {
       method,
       headers,
@@ -34,7 +35,7 @@ export async function fetchData<T>(
       toast.error(`HTTP error! Status: ${response.status}`);
       return null;
     }
-    toast.success(result.message);
+    toast.success(result.message );
   
     const data= method=='GET'? result.data: result
     return data as T

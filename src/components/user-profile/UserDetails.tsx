@@ -15,7 +15,9 @@ import { userUiAtom } from '@/jotai/atoms/uiAtom';
 const fetcher = (url: string) => fetchData<AppUsers>(url).then((data) => data ?? Promise.reject("No data"));
 
 const UserDetails = ({ id }: { id: string }) => {
+    console.log(id)
     const { data: user, error } = useSWR<AppUsers>(`/api${INTERNAL_ENDPOINTS.USER}?id=${id}`, fetcher);
+    console.log(user)
     const setUserUi=useSetAtom(userUiAtom)
     const router= useRouter()
     function handleClose(){

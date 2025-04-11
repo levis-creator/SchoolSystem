@@ -1,6 +1,6 @@
 import DeleteModal from "@/components/modals/DeleteModal";
 import { Button } from "@/components/ui/button";
-import { selectedDepartmentAtom, refreshDepartmentsAtom } from "@/jotai/atoms/departmentAtoms";
+import { selectedDepartmentAtom, refreshDepartmentsAtom } from "@/app/(protected)/dashboard/(admin)/department/departmentAtoms";
 import { editUiAtom, modalAtom, deleteUiAtom } from "@/jotai/atoms/uiAtom";
 import { ENDPOINT } from "@/lib/ApiUrl";
 import { fetchData } from "@/lib/fetch";

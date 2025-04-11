@@ -1,6 +1,3 @@
-(Due to technical issues, the search service is temporarily unavailable.)
-
-Based on the provided **Database Schema**, I will refine and expand the documentation to include a detailed **Database Design** section, along with additional context and explanations. Here's the updated documentation:
 
 ---
 

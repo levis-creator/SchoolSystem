@@ -1,39 +1,44 @@
+"use cli"
 import DeleteModal from "@/components/modals/DeleteModal";
 import { Button } from "@/components/ui/button";
-import { selectedDepartmentAtom, refreshDepartmentsAtom } from "@/jotai/atoms/departmentAtoms";
-import { editUiAtom, modalAtom, deleteUiAtom } from "@/jotai/atoms/uiAtom";
-import { ENDPOINT } from "@/lib/ApiUrl";
+import { deleteUiAtom, editUiAtom, modalAtom } from "@/jotai/atoms/uiAtom";
+import { INTERNAL_ENDPOINTS } from "@/lib/ApiUrl";
 import { fetchData } from "@/lib/fetch";
-import { Department, ResponseDto } from "@/lib/types";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { useSetAtom, useAtomValue, useAtom } from "jotai";
+import { ResponseDto, Student } from "@/lib/types";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { MoreHorizontal } from "lucide-react";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
+import { refreshStudentsAtom, selectedStudentAtom } from "./studentAtoms";
+import { useRouter } from "next/navigation";
 
-const DepartmentActions = ({ department }: { department: Department }) => {
-    const setSelectedDepartment = useSetAtom(selectedDepartmentAtom);
-    const selectedDepartment = useAtomValue(selectedDepartmentAtom);
+const StudentActions = ({ student }: { student: Student }) => {
+    const setSelectedStudent = useSetAtom(selectedStudentAtom);
+    const selectedStudent = useAtomValue(selectedStudentAtom);
     const setEditData = useSetAtom(editUiAtom);
     const setModal = useSetAtom(modalAtom);
     const setDelete = useSetAtom(deleteUiAtom);
-    const [, refreshData] = useAtom(refreshDepartmentsAtom);
+    const [, refreshData] = useAtom(refreshStudentsAtom);
+    const router = useRouter();
 
     const handleEdit = useCallback(() => {
-        setSelectedDepartment(department);
+        setSelectedStudent(student);
         setEditData(true);
         setModal(true);
-    }, [department, setSelectedDepartment, setEditData, setModal]);
+    }, [student, setSelectedStudent, setEditData, setModal]);
 
     const handleDelete = useCallback(() => {
-        setSelectedDepartment(department);
+        setSelectedStudent(student);
         setDelete(true);
-    }, [department, setSelectedDepartment, setDelete]);
-
+    }, [student, setSelectedStudent, setDelete]);
+    const handleDetail = useCallback(() => {
+        router.push(`/dashboard/student/${student?.id}`)
+    }, [router, student])
     const deleteItem = useCallback(async () => {
-        if (!selectedDepartment?.id) return;
+        if (!selectedStudent?.id) return;
 
-        const url = `${ENDPOINT.DEPARTMENT}/${selectedDepartment.id}`;
+        const url = `/api/${INTERNAL_ENDPOINTS.STUDENT}/${selectedStudent.id}`;
         try {
             const results = await fetchData<ResponseDto>(url, { method: 'DELETE' });
             if (results?.success) {
@@ -41,18 +46,18 @@ const DepartmentActions = ({ department }: { department: Department }) => {
                 refreshData();
                 setDelete(false);
             } else {
-                toast.error(results?.message || "Failed to delete department");
+                toast.error(results?.message || "Failed to delete Student");
             }
         } catch (error: unknown) {
             console.error(error)
-            toast.error("An error occurred while deleting the department");
+            toast.error("An error occurred while deleting the Student");
         }
-    }, [selectedDepartment, refreshData, setDelete]);
+    }, [selectedStudent, refreshData, setDelete]);
 
     return (
         <>
             <DeleteModal
-                title="Delete Department"
+                title="Delete Student"
                 description="You are about to permanently delete this data. Are you sure you want to delete?"
                 handleDelete={deleteItem}
                 confirmText="Delete"
@@ -76,6 +81,13 @@ const DepartmentActions = ({ department }: { department: Department }) => {
                         Edit
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                        onClick={handleDetail}
+                        className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+                    >
+                        View
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
                         onClick={handleDelete}
                         className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900 cursor-pointer"
                     >
@@ -87,4 +99,4 @@ const DepartmentActions = ({ department }: { department: Department }) => {
     );
 };
 
-export default DepartmentActions;
+export default StudentActions;
