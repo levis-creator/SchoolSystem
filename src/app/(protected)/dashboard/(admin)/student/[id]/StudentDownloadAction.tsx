@@ -1,9 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Student } from '@/lib/types'
 import { MoreHorizontal } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 
-const StudentDownloadAction = () => {
+const StudentDownloadAction = ({student}:{student:Student}) => {
+  console.log(student)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -17,10 +20,12 @@ const StudentDownloadAction = () => {
         className="min-w-[150px] bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700"
       >
         <DropdownMenuItem
-
+      
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 cursor-pointer"
         >
-          Edit
+          <Link href={`${student.id}/admission`}>
+          Admission Letter
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
 
