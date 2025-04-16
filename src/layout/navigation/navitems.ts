@@ -93,6 +93,11 @@ export type NavItems={
         path:"/dashboard/department"
       },
       {
+        icon: Icons.Library ,
+        name: "Courses",
+        path: "/dashboard/course",
+      },
+      {
         icon: Icons.UsersRound ,
         name: "App Users",
         path:"/dashboard/users"

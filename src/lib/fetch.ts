@@ -32,7 +32,7 @@ export async function fetchData<T>(
     });
     const result:ResponseDto = await response.json();
     if (!response.ok) {
-      toast.error(`HTTP error! Status: ${response.status}`);
+      toast.error(result.message);
       return null;
     }
     toast.success(result.message );

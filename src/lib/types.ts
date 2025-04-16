@@ -70,3 +70,11 @@ export interface DataAtom<T>{
     isLoading:boolean;
     error?:string|null;
 }
+export interface Course {
+    id?: number;
+    courseName: string;
+    courseCode: string;
+    credits: number;
+    departmentId?: number;
+    departmentName?: string; // optional
+  }

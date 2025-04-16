@@ -2,6 +2,7 @@ export const API_URL = {
     EXTERNAL: process.env.NEXT_PUBLIC_API_URL,
     INTERNAL: process.env.NEXT_PUBLIC_API_URL,
 }
+
 export const ENDPOINT = {
     AUTH: {
         LOGIN: '/api/auth/login',
@@ -15,7 +16,8 @@ export const ENDPOINT = {
         USER: '/api/userManager/user'
     },
     DEPARTMENT: '/api/department',
-    STUDENT: '/api/students'
+    STUDENT: '/api/students',
+    COURSE:'/api/course'
 
 }
 
@@ -29,5 +31,6 @@ export const INTERNAL_ENDPOINTS = {
     USERS: '/users',
     USER: '/user',
     DEPARTMENT:'/department',
-    STUDENT:'/student'
+    STUDENT:'/student',
+    COURSE:'/course'
 }

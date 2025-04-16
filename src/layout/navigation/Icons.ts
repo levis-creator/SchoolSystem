@@ -1,4 +1,4 @@
-import { Boxes, GraduationCap, UsersRound } from "lucide-react";
+import { Boxes, GraduationCap, Library, UsersRound } from "lucide-react";
 import {
     BoxCubeIcon,
     CalenderIcon,
@@ -26,5 +26,6 @@ import {
     UserCircleIcon,
     UsersRound,
     Boxes,
-    GraduationCap
+    GraduationCap,
+    Library
   }

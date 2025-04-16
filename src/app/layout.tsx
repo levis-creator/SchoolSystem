@@ -1,14 +1,12 @@
 import { Outfit } from "next/font/google";
-import "./globals.css";
 import { Toaster } from 'react-hot-toast';
+import "./globals.css";
 
 import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
-import { Metadata } from "next";
-import { AppInfo } from "@/lib/AppInfo";
 import JotaiProvider from "@/jotai/JotaiProvider";
-import { getToken } from "@/lib/token";
-import { redirect } from "next/navigation";
+import { AppInfo } from "@/lib/AppInfo";
+import { Metadata } from "next";
 import { Suspense } from "react";
 
 const outfit = Outfit({

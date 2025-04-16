@@ -18,7 +18,7 @@ import { Modal } from '@/components/ui/modal';
 // Atoms
 import { editUiAtom, modalAtom } from '@/jotai/atoms/uiAtom';
 import { departmentsAtom, refreshDepartmentsAtom } from '../department/departmentAtoms';
-import { refreshStudentsAtom, selectedStudentAtom } from './studentAtoms';
+import { refreshCoursesAtom, selectedCourseAtom } from './courseAtoms';
 
 // Types and constants
 import { INTERNAL_ENDPOINTS } from '@/lib/ApiUrl';
@@ -26,45 +26,38 @@ import { fetchData } from '@/lib/fetch';
 import { Department, ResponseDto } from '@/lib/types';
 
 const formSchema = z.object({
-    firstName: z.string().min(2, 'First name must be at least 2 characters'),
-    lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-    email: z.string().email('Invalid email address'),
-    nationalId: z.string().min(6, 'National ID must be at least 6 characters'),
-    admNo: z.string().min(3, 'Admission number must be at least 3 characters'),
+    courseName: z.string().min(3, 'Course name must be at least 3 characters'),
+    courseCode: z.string().min(2, 'Course code must be at least 2 characters'),
+    credits: z
+        .number({ invalid_type_error: 'Credits must be a number' })
+        .min(1, 'Credits must be at least 1'),
     departmentId: z.string().min(1, 'Department is required'),
-    isActive: z.boolean(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 const defaultValues: FormValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    nationalId: '',
-    admNo: '',
+    courseName: '',
+    courseCode: '',
+    credits: 3,
     departmentId: '',
-    isActive: true,
 };
 
-const StudentForm = () => {
-    // State management
+const CourseForm = () => {
     const [isOpen, setIsOpen] = useAtom(modalAtom);
-    const [isEditMode,setEditMode] = useAtom(editUiAtom);
-    const selectedStudent = useAtomValue(selectedStudentAtom);
-    const [, refetchStudents] = useAtom(refreshStudentsAtom);
+    const [isEditMode, setEditMode] = useAtom(editUiAtom);
+    const selectedCourse = useAtomValue(selectedCourseAtom);
+    const [, refetchCourses] = useAtom(refreshCoursesAtom);
     const departments = useAtomValue(departmentsAtom);
     const fetchDepartments = useSetAtom(refreshDepartmentsAtom);
 
-    // Local state
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Form handling
     const {
         register,
         handleSubmit,
         reset,
-        control, // <-- Add this
+        control,
         formState: { errors, isDirty },
     } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -72,41 +65,54 @@ const StudentForm = () => {
         mode: 'onChange',
     });
 
-    // Effects
     useEffect(() => {
         if (isOpen) {
             fetchDepartments();
-            reset(isEditMode && selectedStudent ? selectedStudent : defaultValues);
+            if (isEditMode && selectedCourse) {
+                reset({
+                    courseName: selectedCourse.courseName,
+                    courseCode: selectedCourse.courseCode,
+                    credits: selectedCourse.credits,
+                    departmentId: selectedCourse.departmentId?.toString() || '',
+                });
+            } else {
+                reset(defaultValues);
+            }
         }
-    }, [isOpen, isEditMode, selectedStudent, reset, fetchDepartments]);
+    }, [isOpen, isEditMode, selectedCourse, reset, fetchDepartments]);
 
-    // Handlers
     const closeModal = () => {
         setIsOpen(false);
     };
 
     const onSubmit = async (data: FormValues) => {
         setIsSubmitting(true);
-        console.log(data)
+
         try {
-            const endpoint = isEditMode && selectedStudent
-                ? `${INTERNAL_ENDPOINTS.STUDENT}/${selectedStudent.id}`
-                : INTERNAL_ENDPOINTS.STUDENT;
+            const endpoint = isEditMode && selectedCourse
+                ? `${INTERNAL_ENDPOINTS.COURSE}/${selectedCourse.id}`
+                : INTERNAL_ENDPOINTS.COURSE;
 
             const method = isEditMode ? 'PUT' : 'POST';
-            const payload = isEditMode ? { ...data, id: selectedStudent?.id } : data;
+
+            const payload = {
+                ...data,
+                credits: Number(data.credits),
+                departmentId: Number(data.departmentId),
+                ...(isEditMode ? { id: selectedCourse?.id } : {}),
+            };
+
             const res = await fetchData<ResponseDto>(`/api${endpoint}`, {
                 method,
                 body: payload,
             });
 
             if (res?.success) {
-                toast.success(`Student ${isEditMode ? 'updated' : 'created'} successfully`);
-                await refetchStudents();
+                toast.success(`Course ${isEditMode ? 'updated' : 'created'} successfully`);
+                await refetchCourses();
                 reset();
-                setEditMode(false)
+                setEditMode(false);
                 closeModal();
-                
             } else {
                 toast.error(res?.message || 'An error occurred');
             }
@@ -118,23 +124,21 @@ const StudentForm = () => {
         }
     };
 
-    // Derived values
     const isLoading = isSubmitting || departments.isLoading;
-    const submitButtonText = isEditMode ? 'Update Student' : 'Add Student';
-    const modalTitle = `${isEditMode ? 'Edit' : 'Add'} Student`;
+    const submitButtonText = isEditMode ? 'Update Course' : 'Add Course';
+    const modalTitle = `${isEditMode ? 'Edit' : 'Add'} Course`;
 
     return (
         <Modal
             isOpen={isOpen}
             onClose={closeModal}
             className="max-w-[500px] m-4"
-            aria-labelledby="student-form-title"
+            aria-labelledby="Course-form-title"
         >
-            <div
-                className="no-scrollbar relative w-full overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+            <div className="no-scrollbar relative w-full overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
                 <div className="px-2 pr-14">
                     <h4
-                        id="student-form-title"
+                        id="Course-form-title"
                         className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90"
                     >
                         {modalTitle}
@@ -143,92 +147,56 @@ const StudentForm = () => {
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
                     <div className="grid grid-cols-1 gap-x-6 gap-y-5">
-                        {/* First Name */}
+                        {/* Course Name */}
                         <div>
-                            <Label htmlFor="firstName">First Name</Label>
+                            <Label htmlFor="courseName">Course Name</Label>
                             <Input
-                                id="firstName"
-                                {...register('firstName')}
+                                id="courseName"
+                                {...register('courseName')}
                                 type="text"
                                 disabled={isLoading}
-                                aria-invalid={!!errors.firstName}
-                                aria-describedby="firstName-error"
+                                aria-invalid={!!errors.courseName}
+                                aria-describedby="courseName-error"
                             />
-                            {errors.firstName && (
-                                <p id="firstName-error" className="text-red-500 text-sm">
-                                    {errors.firstName.message}
+                            {errors.courseName && (
+                                <p id="courseName-error" className="text-red-500 text-sm">
+                                    {errors.courseName.message}
                                 </p>
                             )}
                         </div>
 
-                        {/* Last Name */}
+                        {/* Course Code */}
                         <div>
-                            <Label htmlFor="lastName">Last Name</Label>
+                            <Label htmlFor="courseCode">Course Code</Label>
                             <Input
-                                id="lastName"
-                                {...register('lastName')}
+                                id="courseCode"
+                                {...register('courseCode')}
                                 type="text"
                                 disabled={isLoading}
-                                aria-invalid={!!errors.lastName}
-                                aria-describedby="lastName-error"
+                                aria-invalid={!!errors.courseCode}
+                                aria-describedby="courseCode-error"
                             />
-                            {errors.lastName && (
-                                <p id="lastName-error" className="text-red-500 text-sm">
-                                    {errors.lastName.message}
+                            {errors.courseCode && (
+                                <p id="courseCode-error" className="text-red-500 text-sm">
+                                    {errors.courseCode.message}
                                 </p>
                             )}
                         </div>
 
-                        {/* Email */}
+                        {/* Credits */}
                         <div>
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="credits">Credits</Label>
                             <Input
-                                id="email"
-                                {...register('email')}
-                                type="email"
+                                id="credits"
+                                {...register('credits', { valueAsNumber: true })}
+                                type="number"
                                 disabled={isLoading}
-                                aria-invalid={!!errors.email}
-                                aria-describedby="email-error"
+                                aria-invalid={!!errors.credits}
+                                aria-describedby="credits-error"
                             />
-                            {errors.email && (
-                                <p id="email-error" className="text-red-500 text-sm">
-                                    {errors.email.message}
-                                </p>
-                            )}
-                        </div>
-
-                        {/* National ID */}
-                        <div>
-                            <Label htmlFor="nationalId">National ID</Label>
-                            <Input
-                                id="nationalId"
-                                {...register('nationalId')}
-                                type="text"
-                                disabled={isLoading}
-                                aria-invalid={!!errors.nationalId}
-                                aria-describedby="nationalId-error"
-                            />
-                            {errors.nationalId && (
-                                <p id="nationalId-error" className="text-red-500 text-sm">
-                                    {errors.nationalId.message}
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Admission Number */}
-                        <div>
-                            <Label htmlFor="admNo">Admission Number</Label>
-                            <Input
-                                id="admNo"
-                                {...register('admNo')}
-                                type="text"
-                                disabled={isLoading}
-                                aria-invalid={!!errors.admNo}
-                                aria-describedby="admNo-error"
-                            />
-                            {errors.admNo && (
-                                <p id="admNo-error" className="text-red-500 text-sm">
-                                    {errors.admNo.message}
+                            {errors.credits && (
+                                <p id="credits-error" className="text-red-500 text-sm">
+                                    {errors.credits.message}
                                 </p>
                             )}
                         </div>
@@ -259,7 +227,6 @@ const StudentForm = () => {
                         </div>
                     </div>
 
-                    {/* Form Actions */}
                     <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
                         <Button
                             size="sm"
@@ -267,7 +234,6 @@ const StudentForm = () => {
                             onClick={closeModal}
                             type="button"
                             disabled={isLoading}
-                            aria-label="Close form"
                         >
                             {isLoading ? <ClipLoader size={20} color="#3B82F6" /> : 'Close'}
                         </Button>
@@ -275,7 +241,6 @@ const StudentForm = () => {
                             size="sm"
                             type="submit"
                             disabled={isLoading || !isDirty}
-                            aria-label={submitButtonText}
                         >
                             {isLoading ? (
                                 <ClipLoader size={20} color="#FFFFFF" />
@@ -290,4 +255,4 @@ const StudentForm = () => {
     );
 };
 
-export default StudentForm;
+export default CourseForm;
